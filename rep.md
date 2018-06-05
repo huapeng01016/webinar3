@@ -1,7 +1,7 @@
 # Incorporating Stata into reproducible documents
 
 ##  [Hua Peng@StataCorp][hpeng]
-### [https://huapeng01016.github.io/reptalk/](https://huapeng01016.github.io/reptalk/)
+### [https://huapeng01016.github.io/webinar2/](https://huapeng01016.github.io/webinar2/)
 
 # Reproducible research and reproducible documents
 
@@ -15,9 +15,119 @@
  
 ## Stata 15 added commands to automate report generation
 
-- dyndoc - convert dynamic Markdown documents to web pages
 - putdocx - create Word documents
+- dyndoc - convert dynamic Markdown documents to web pages
 - putpdf - create PDF files
+- putexcel - create Excel file (from Stata 13)
+
+
+# putdocx
+
+- [Word document](./examples/fuel_consumption.docx) 
+- [source do-file](./examples/fuel_consumption.do)
+
+# Generate tables from saved results 
+
+## From estimation command
+
+~~~~
+regress fuel weight
+putdocx table tbl_reg = etable
+~~~~
+
+- [Word document](./examples/etable_1.docx) 
+- [source do-file](./examples/etable_1.do)
+
+## From **margins**
+
+~~~~
+regress fuel weight i.foreign i.rep78
+margins foreign rep78 
+putdocx table tbl_marg = etable
+~~~~
+
+- [Word document](./examples/etable_3.docx) 
+- [source do-file](./examples/etable_3.do)
+
+
+## From **estimates table** 
+
+~~~~
+quietly regress fuel weight gear turn
+estimates store model1
+quietly regress fuel weight gear turn foreign
+estimates store model2
+estimates table model1 model2, b(%7.4f) stats(N r2 r2_a) star
+putdocx table tbl_est = etable
+~~~~
+
+- [Word document](./examples/etable_4.docx) 
+- [source do-file](./examples/etable_4.do)
+
+
+## From dataset
+
+~~~~
+putdocx table tbl_data = data(_all)
+~~~~
+
+- [Word document](./examples/data_table.docx) 
+- [source do-file](./examples/data_table.do)
+
+
+## Change table styles and layout 
+
+~~~~
+		// add a table without borders
+putdocx table tbl_data_1 = data(_all), border(all,nil)
+		// add a double width line border 
+		// at the bottom of the first row
+putdocx table tbl_data_1(1,.), border(bottom,double)
+putdocx table tbl_data_1(3,.), border(bottom, dotted)
+		// make the first cell of 
+		// the first row span 3 columns
+putdocx table tbl_data_1(1,1), colspan(3) halign(center)
+putdocx table tbl_data_1(14,.), border(top,dotted)
+putdocx table tbl_data_1(17,.), border(top,double)
+		// make the first cells of 17th and 18th 
+		// rows span 3 columns, also make the contents 
+		// of the cells left aligned and italic  
+putdocx table tbl_data_1(17,1), colspan(3) halign(left) italic
+putdocx table tbl_data_1(18,1), colspan(3) halign(left) italic
+~~~~
+
+## After change table styles and layout
+
+- [Word document](./examples/data_table_1.docx) 
+- [source do-file](./examples/data_table_1.do)
+
+## Nested table
+
+~~~~
+	// table may be created in memory using -memtable- option
+regress fuel weight if foreign
+putdocx table tbl_f = etable, memtable
+regress fuel weight if !foreign
+putdocx table tbl_d = etable, memtable
+	// add tables in memory into cells of another tbale
+putdocx table tbl_l = (2, 2)
+putdocx table tbl_l(1, 1)  = ("Foreign"), halign(center)
+putdocx table tbl_l(1, 2)  = ("Domestic"), halign(center)
+putdocx table tbl_l(2, 1)  = table(tbl_f)
+putdocx table tbl_l(2, 2)  = table(tbl_d)	
+~~~~
+
+## Resulted nested table
+
+- [Word document](./examples/nest_table.docx) 
+- [source do-file](./examples/nest_table.do)
+
+# Community-contributed commands based on **putdocx**
+
+- sum2docx
+- reg2docx
+- t2docx
+- corr2docx
 
 # A **dyndoc** example 
 
@@ -228,113 +338,6 @@ dynpandoc fuel_cc.txt, saving(fuel_pandoc.pdf)  ///
 ~~~~
 
 
-# putdocx
-
-- [Word document](./examples/fuel_consumption.docx) 
-- [source do-file](./examples/fuel_consumption.do)
-
-# Generate tables from saved results 
-
-## From estimation command
-
-~~~~
-regress fuel weight
-putdocx table tbl_reg = etable
-~~~~
-
-- [Word document](./examples/etable_1.docx) 
-- [source do-file](./examples/etable_1.do)
-
-## From **margins**
-
-~~~~
-regress fuel weight i.foreign i.rep78
-margins foreign rep78 
-putdocx table tbl_marg = etable
-~~~~
-
-- [Word document](./examples/etable_3.docx) 
-- [source do-file](./examples/etable_3.do)
-
-
-## From **estimates table** 
-
-~~~~
-quietly regress fuel weight gear turn
-estimates store model1
-quietly regress fuel weight gear turn foreign
-estimates store model2
-estimates table model1 model2, b(%7.4f) stats(N r2 r2_a) star
-putdocx table tbl_est = etable
-~~~~
-
-- [Word document](./examples/etable_4.docx) 
-- [source do-file](./examples/etable_4.do)
-
-
-## From dataset
-
-~~~~
-putdocx table tbl_data = data(_all)
-~~~~
-
-- [Word document](./examples/data_table.docx) 
-- [source do-file](./examples/data_table.do)
-
-
-## Change table styles and layout 
-
-~~~~
-		// add a table without borders
-putdocx table tbl_data_1 = data(_all), border(all,nil)
-		// add a double width line border 
-		// at the bottom of the first row
-putdocx table tbl_data_1(1,.), border(bottom,double)
-putdocx table tbl_data_1(3,.), border(bottom, dotted)
-		// make the first cell of 
-		// the first row span 3 columns
-putdocx table tbl_data_1(1,1), colspan(3) halign(center)
-putdocx table tbl_data_1(14,.), border(top,dotted)
-putdocx table tbl_data_1(17,.), border(top,double)
-		// make the first cells of 17th and 18th 
-		// rows span 3 columns, also make the contents 
-		// of the cells left aligned and italic  
-putdocx table tbl_data_1(17,1), colspan(3) halign(left) italic
-putdocx table tbl_data_1(18,1), colspan(3) halign(left) italic
-~~~~
-
-## After change table styles and layout
-
-- [Word document](./examples/data_table_1.docx) 
-- [source do-file](./examples/data_table_1.do)
-
-## Nested table
-
-~~~~
-	// table may be created in memory using -memtable- option
-regress fuel weight if foreign
-putdocx table tbl_f = etable, memtable
-regress fuel weight if !foreign
-putdocx table tbl_d = etable, memtable
-	// add tables in memory into cells of another tbale
-putdocx table tbl_l = (2, 2)
-putdocx table tbl_l(1, 1)  = ("Foreign"), halign(center)
-putdocx table tbl_l(1, 2)  = ("Domestic"), halign(center)
-putdocx table tbl_l(2, 1)  = table(tbl_f)
-putdocx table tbl_l(2, 2)  = table(tbl_d)	
-~~~~
-
-## Resulted nested table
-
-- [Word document](./examples/nest_table.docx) 
-- [source do-file](./examples/nest_table.do)
-
-# Community-contributed commands based on **putdocx**
-
-- sum2docx
-- reg2docx
-- t2docx
-- corr2docx
 
 # Recap
 
