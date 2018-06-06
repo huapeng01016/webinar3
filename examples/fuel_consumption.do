@@ -20,7 +20,7 @@ putdocx text ("based on the variable ")
 putdocx text ("mpg"), bold 
 putdocx text (".") 
 
-putdocx paragraph, indent(left, 1in)
+putdocx paragraph, font("Courier New", 12)
 putdocx text (". generate fuel = 100/mpg"), linebreak
 putdocx text (`". label variable fuel "Fuel consumption (Gallons per 100 Miles)""')
 
@@ -111,14 +111,16 @@ putdocx table tbl_reg = etable
 matrix define eb = e(b)
 
 putdocx paragraph
-local eb11 : display %9.4f eb[1,1]
+local eb11 : display %6.4f eb[1,1]
 if `eb11' < 0 {
-putdocx text ("The regression shows that for every unit increase in weight, ")
-putdocx text ("a -`eb11' unit decrease in fuel consumption is predicted.")  
+putdocx text ("The regression shows that for every unit increase in weight, a ")
+putdocx text ("-`eb11'"), italic 
+putdocx text (" unit decrease in fuel consumption is predicted.")  
 }
 else {
-putdocx text ("The regression shows that for every unit increase in weight, ")
-putdocx text ("a `eb11' unit increase in fuel consumption is predicted.")  
+putdocx text ("The regression shows that for every unit increase in weight, a ")
+putdocx text ("`eb11'"), italic
+putdocx text (" unit increase in fuel consumption is predicted.")  
 }
 
 putdocx pagebreak
