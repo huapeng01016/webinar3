@@ -25,6 +25,7 @@ cd examples
 	do data_table.do
 	do data_table_1.do
 	do nest_table.do
+	do logout.do
 cd ..
 }
 

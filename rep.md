@@ -128,7 +128,16 @@ putdocx table tbl_l(2, 2)  = table(tbl_d)
 - [Word document](./examples/nest_table.docx) 
 - [source do-file](./examples/nest_table.do)
 
-# Community-contributed commands based on **putdocx**
+# Include output from Stata commands 
+
+- Include text file using [docxaddfile](./examples/docxaddfile.ado) 
+- [Word document](./examples/logout.docx) 
+- [source do-file](./examples/logout.do)
+
+
+# Community-contributed software based on **putdocx** 
+
+Some commands on [ssc](https://www.stata.com/support/ssc-installation/)
 
 - sum2docx
 - reg2docx
@@ -143,11 +152,6 @@ putdocx table tbl_l(2, 2)  = table(tbl_d)
 ~~~~
 dyndoc fuel.txt, replace 	
 ~~~~
-
-# Why dynamic documents?
-
-- Eliminate manual steps such as hand-editing documents
-- Include outputs, saved results, and graphs
 	
 
 # Dynamic tags
@@ -283,10 +287,6 @@ This is [an example](http://example.com/ "Title") link.
 dyndoc fuel_consumption.txt, replace 
 ~~~~
 
-# ".do files on steroids"
-
-- macros work the same as in a do-file
-- accept arguments
 
 # Use arguments in **dyndoc**
 
@@ -336,20 +336,13 @@ dynpandoc fuel_cc.txt, saving(fuel_pandoc.pdf)  ///
 		from(markdown) replace
 ~~~~
 
-
-
 # Recap
 
-## **dyndoc** to generate web pages
-
-- Include outputs, saved results, and graph in text file using dynamic tags
-- Use Markdown syntax to format text file to produce web pages
-
-## **putdocx** and **putpdf**
-
-- Include saved results and graphs in Word and PDF documents
-- Easily create tables 
-- Easily modify table styles and layouts
+- Stata tools for reproducible research 
+- **putdocx** to generate Word documents 
+- **dyndoc** to generate web pages
+- **putpdf** to generate PDF files
+- Many  community-contributed packages
 
 # Thanks!
 
