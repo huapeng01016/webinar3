@@ -18,8 +18,14 @@
 - putdocx - create Word documents
 - dyndoc - convert dynamic Markdown documents to web pages
 - putpdf - create PDF files
-- putexcel - create Excel file (from Stata 13)
 
+#  A hands-on session
+
+- load and examine data
+- run analysis
+- save commands to a script
+- run script
+- write report 
 
 # putdocx
 
@@ -143,13 +149,6 @@ dyndoc fuel.txt, replace
 - Eliminate manual steps such as hand-editing documents
 - Include outputs, saved results, and graphs
 	
-#  A hands-on session
-
-- load and examine data
-- run analysis
-- save commands to a script
-- run script
-- write report 
 
 # Dynamic tags
 

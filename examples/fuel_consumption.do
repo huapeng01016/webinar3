@@ -188,9 +188,9 @@ putdocx table tbl_summ1 = matrix(stats),  ///
         border(end, nil)
 
 putdocx table tbl_summ1(1, 1) = ("")
-putdocx table tbl_summ1(1, 2) = ("Observations")
+putdocx table tbl_summ1(1, 2) = ("Obs")
 putdocx table tbl_summ1(1, 3) = ("Mean")
-putdocx table tbl_summ1(1, 4) = ("Standard Deviation")
+putdocx table tbl_summ1(1, 4) = ("SD")
 putdocx table tbl_summ1(1, 5) = ("Min")
 putdocx table tbl_summ1(1, 6) = ("Max")
 putdocx table tbl_summ1(1, .), border(bottom, dashed) valign(bottom)
@@ -207,9 +207,9 @@ putdocx table tbl_summ2 = matrix(stats),  ///
         border(end, nil)
 
 putdocx table tbl_summ2(1, 1) = ("")
-putdocx table tbl_summ2(1, 2) = ("Observations")
+putdocx table tbl_summ2(1, 2) = ("Obs")
 putdocx table tbl_summ2(1, 3) = ("Mean")
-putdocx table tbl_summ2(1, 4) = ("Standard Deviation")
+putdocx table tbl_summ2(1, 4) = ("SD")
 putdocx table tbl_summ2(1, 5) = ("Min")
 putdocx table tbl_summ2(1, 6) = ("Max")
 putdocx table tbl_summ2(1, .), border(bottom, dashed) valign(bottom)
@@ -246,6 +246,31 @@ putdocx table d(1,.), border(bottom, dashed)
 putdocx table tbl_l(4, 1), colspan(2)
 putdocx table tbl_l(4, 1) = table(d)
 
+putdocx sectionbreak
+putdocx paragraph, style("Heading2")
+putdocx text ("Output from Stata commands")
+
+log using outputs.log, text replace nomsg
+sysuse auto, clear
+generate fuel = 100/mpg
+label variable fuel "Fuel consumption (Gallons per 100 Miles)"
+regress fuel weight
+mata:
+st_view(Y=.,.,("fuel"), .)
+st_view(X=.,.,("weight"), .)
+X=X,J(rows(X),1,1)
+b=invsym(X'*X)*X'*Y
+v=((Y- X*b)'*(Y- X*b))/(rows(X)-cols(X))*invsym(X'*X) 
+se=sqrt(diagonal(v))
+t=b:/se
+p=2*ttail(rows(X)-cols(X),abs(t))
+b,se,t,p
+end
+log close
+
+docxaddfile outputs.log, stopat("log close")
+
+cap erase outputs.log
 cap erase esttab_ex.csv
 cap erase temp.png
 cap erase temp_f.png
